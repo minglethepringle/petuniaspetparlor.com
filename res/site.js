@@ -30,39 +30,13 @@
         reveals.forEach(function (el) { el.classList.add("is-visible"); });
     }
 
-    // Gallery lightbox
-    var lightbox = document.getElementById("lightbox");
-    var items = Array.prototype.slice.call(document.querySelectorAll(".gallery a"));
-    if (lightbox && items.length && lightbox.showModal) {
-        var img = lightbox.querySelector("img");
-        var count = lightbox.querySelector(".lightbox__count");
-        var current = 0;
-
-        function show(i) {
-            current = (i + items.length) % items.length;
-            img.src = items[current].href;
-            img.alt = items[current].querySelector("img").alt;
-            count.textContent = (current + 1) + " / " + items.length;
+    // Facebook feed: the page plugin renders at a fixed width, so size it to fit
+    var feed = document.querySelector(".fb-feed iframe");
+    if (feed) {
+        var width = Math.max(180, Math.min(500, Math.floor(feed.parentNode.clientWidth)));
+        if (width !== 500) {
+            feed.width = width;
+            feed.src = feed.src.replace("width=500", "width=" + width);
         }
-
-        items.forEach(function (a, i) {
-            a.addEventListener("click", function (e) {
-                e.preventDefault();
-                show(i);
-                lightbox.showModal();
-            });
-        });
-
-        lightbox.querySelector(".lightbox__prev").addEventListener("click", function () { show(current - 1); });
-        lightbox.querySelector(".lightbox__next").addEventListener("click", function () { show(current + 1); });
-        lightbox.querySelector(".lightbox__close").addEventListener("click", function () { lightbox.close(); });
-        lightbox.addEventListener("click", function (e) {
-            if (e.target === lightbox) lightbox.close();
-        });
-        lightbox.addEventListener("keydown", function (e) {
-            if (e.key === "ArrowLeft") show(current - 1);
-            if (e.key === "ArrowRight") show(current + 1);
-        });
-        lightbox.addEventListener("close", function () { img.removeAttribute("src"); });
     }
 })();
